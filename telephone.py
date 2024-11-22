@@ -78,11 +78,13 @@ class TranslationTelephone:
         for target_lang in languages:
             time.sleep(delay)  # Add delay to avoid rate limiting
 
-            translation = self.translate(current_text, current_lang, target_lang)
+            translation = self.translate(text=current_text, source_lang=current_lang, target_lang=target_lang)
+            cur_eng_translation = self.translate(text=translation, source_lang=target_lang, target_lang="English")
             results["translations"].append({
                 "from": current_lang,
                 "to": target_lang,
-                "text": translation
+                "text": translation,
+                "current_english_translation": cur_eng_translation
             })
 
             current_text = translation
@@ -110,6 +112,7 @@ def print_game_results(results: dict):
     for i, translation in enumerate(results["translations"], 1):
         print(f"\n{i}. {translation['from']} → {translation['to']}:")
         print(f"   \"{translation['text']}\"")
+        print(f"   \"{translation['current_english_translation']}\"")
 
     print(f"\nFinal translation back to English:")
     print(f"\"{results['final']}\"\n")
